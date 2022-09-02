@@ -44,9 +44,7 @@ public class NextPermutationIterator<E> implements Iterator<List<E>> {
      * @throws NullPointerException if collection is null
      */
     public NextPermutationIterator(final Collection<? extends E> collection) {
-        Objects.requireNonNull(collection, "collection");
-        nextPermutation = new ArrayList<>(collection);
-        comparator = null;
+        this(collection, null);
     }
 
     /**

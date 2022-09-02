@@ -113,13 +113,13 @@ class NextPermutationIteratorTest {
 
         assertTrue(permutationIterator.hasNext());
         assertEquals(permutationIterator.next(), Arrays.asList(
-                new NonComparableObject('A'),
-                new NonComparableObject('B')));
+                new NonComparableObject<>('A'),
+                new NonComparableObject<>('B')));
 
         assertTrue(permutationIterator.hasNext());
         assertEquals(permutationIterator.next(), Arrays.asList(
-                new NonComparableObject('B'),
-                new NonComparableObject('A')));
+                new NonComparableObject<>('B'),
+                new NonComparableObject<>('A')));
 
         assertFalse(permutationIterator.hasNext());
     }
@@ -148,6 +148,6 @@ class NextPermutationIteratorTest {
                         new NonComparableObject<>('B')));
 
         assertTrue(permutationIterator.hasNext());
-        assertThrows(ClassCastException.class, () -> permutationIterator.next());
+        assertThrows(ClassCastException.class, permutationIterator::next);
     }
 }

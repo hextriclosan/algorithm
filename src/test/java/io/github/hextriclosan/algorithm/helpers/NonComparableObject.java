@@ -3,11 +3,11 @@ package io.github.hextriclosan.algorithm.helpers;
 import java.util.Objects;
 
 public class NonComparableObject<T> {
+    private final T value;
+
     public NonComparableObject(T value) {
         this.value = value;
     }
-
-    private final T value;
 
     public T getValue() {
         return value;
@@ -15,9 +15,15 @@ public class NonComparableObject<T> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        NonComparableObject that = (NonComparableObject) o;
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        NonComparableObject<?> that = (NonComparableObject<?>) o;
         return Objects.equals(value, that.value);
     }
 
