@@ -27,7 +27,7 @@ implementation 'io.github.hextriclosan:algorithm:0.0.2'
 Compares Iterables lexicographically
 ```java
 Comparator<Iterable<Character>> comparator = new LexicographicalComparator<>();
-comparator.compare(Arrays.asList('A', 'B', 'C'), Arrays.asList('C', 'B', 'A')); // -1
+comparator.compare(List.of('A', 'B', 'C'), List.of('C', 'B', 'A')); // -1
 ```
 
 ### Functors
@@ -36,7 +36,7 @@ comparator.compare(Arrays.asList('A', 'B', 'C'), Arrays.asList('C', 'B', 'A')); 
 Evaluates if Iterable is sorted.
 ```java
 Predicate<Iterable<Character>> predicate = new IsSortedPredicate<>();
-predicate.test(Arrays.asList('A', 'B', 'C')); // true
+predicate.test(List.of('A', 'B', 'C')); // true
 ```
 
 
@@ -46,8 +46,8 @@ predicate.test(Arrays.asList('A', 'B', 'C')); // true
 Inspired by `next_permutation`/`prev_permutation` algorithms from C++ standard
 library. The iterator creates permutations of an input collection, using the lexicographical order.
 ```java
-var iterable = () -> new NextPermutationIterator<>(Arrays.asList('A', 'B', 'B'));
-StreamSupport.stream(iterable.spliterator(), false).forEach(System.out::println);
+var iterator = new NextPermutationIterator<>(List.of('A', 'B', 'B'));
+iterator.forEachRemaining(System.out::println);
 // prints out
 // [A, B, B]
 // [B, A, B]
