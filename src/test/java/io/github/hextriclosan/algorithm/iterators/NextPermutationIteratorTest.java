@@ -33,22 +33,22 @@ class NextPermutationIteratorTest {
         Iterator<List<Character>> permutationIterator = new NextPermutationIterator<>(Arrays.asList('A', 'B', 'C'));
 
         assertTrue(permutationIterator.hasNext());
-        assertEquals(permutationIterator.next(), Arrays.asList('A', 'B', 'C'));
+        assertEquals(Arrays.asList('A', 'B', 'C'), permutationIterator.next());
 
         assertTrue(permutationIterator.hasNext());
-        assertEquals(permutationIterator.next(), Arrays.asList('A', 'C', 'B'));
+        assertEquals(Arrays.asList('A', 'C', 'B'), permutationIterator.next());
 
         assertTrue(permutationIterator.hasNext());
-        assertEquals(permutationIterator.next(), Arrays.asList('B', 'A', 'C'));
+        assertEquals(Arrays.asList('B', 'A', 'C'), permutationIterator.next());
 
         assertTrue(permutationIterator.hasNext());
-        assertEquals(permutationIterator.next(), Arrays.asList('B', 'C', 'A'));
+        assertEquals(Arrays.asList('B', 'C', 'A'), permutationIterator.next());
 
         assertTrue(permutationIterator.hasNext());
-        assertEquals(permutationIterator.next(), Arrays.asList('C', 'A', 'B'));
+        assertEquals(Arrays.asList('C', 'A', 'B'), permutationIterator.next());
 
         assertTrue(permutationIterator.hasNext());
-        assertEquals(permutationIterator.next(), Arrays.asList('C', 'B', 'A'));
+        assertEquals(Arrays.asList('C', 'B', 'A'), permutationIterator.next());
 
         assertFalse(permutationIterator.hasNext());
     }
@@ -58,22 +58,22 @@ class NextPermutationIteratorTest {
         Iterator<List<Character>> permutationIterator = new NextPermutationIterator<>(Arrays.asList('A', 'A', 'B', 'B'));
 
         assertTrue(permutationIterator.hasNext());
-        assertEquals(permutationIterator.next(), Arrays.asList('A', 'A', 'B', 'B'));
+        assertEquals(Arrays.asList('A', 'A', 'B', 'B'), permutationIterator.next());
 
         assertTrue(permutationIterator.hasNext());
-        assertEquals(permutationIterator.next(), Arrays.asList('A', 'B', 'A', 'B'));
+        assertEquals(Arrays.asList('A', 'B', 'A', 'B'), permutationIterator.next());
 
         assertTrue(permutationIterator.hasNext());
-        assertEquals(permutationIterator.next(), Arrays.asList('A', 'B', 'B', 'A'));
+        assertEquals(Arrays.asList('A', 'B', 'B', 'A'), permutationIterator.next());
 
         assertTrue(permutationIterator.hasNext());
-        assertEquals(permutationIterator.next(), Arrays.asList('B', 'A', 'A', 'B'));
+        assertEquals(Arrays.asList('B', 'A', 'A', 'B'), permutationIterator.next());
 
         assertTrue(permutationIterator.hasNext());
-        assertEquals(permutationIterator.next(), Arrays.asList('B', 'A', 'B', 'A'));
+        assertEquals(Arrays.asList('B', 'A', 'B', 'A'), permutationIterator.next());
 
         assertTrue(permutationIterator.hasNext());
-        assertEquals(permutationIterator.next(), Arrays.asList('B', 'B', 'A', 'A'));
+        assertEquals(Arrays.asList('B', 'B', 'A', 'A'), permutationIterator.next());
 
         assertFalse(permutationIterator.hasNext());
     }
@@ -84,22 +84,22 @@ class NextPermutationIteratorTest {
                 Comparator.reverseOrder());
 
         assertTrue(permutationIterator.hasNext());
-        assertEquals(permutationIterator.next(), Arrays.asList('C', 'B', 'A'));
+        assertEquals(Arrays.asList('C', 'B', 'A'), permutationIterator.next());
 
         assertTrue(permutationIterator.hasNext());
-        assertEquals(permutationIterator.next(), Arrays.asList('C', 'A', 'B'));
+        assertEquals(Arrays.asList('C', 'A', 'B'), permutationIterator.next());
 
         assertTrue(permutationIterator.hasNext());
-        assertEquals(permutationIterator.next(), Arrays.asList('B', 'C', 'A'));
+        assertEquals(Arrays.asList('B', 'C', 'A'), permutationIterator.next());
 
         assertTrue(permutationIterator.hasNext());
-        assertEquals(permutationIterator.next(), Arrays.asList('B', 'A', 'C'));
+        assertEquals(Arrays.asList('B', 'A', 'C'), permutationIterator.next());
 
         assertTrue(permutationIterator.hasNext());
-        assertEquals(permutationIterator.next(), Arrays.asList('A', 'C', 'B'));
+        assertEquals(Arrays.asList('A', 'C', 'B'), permutationIterator.next());
 
         assertTrue(permutationIterator.hasNext());
-        assertEquals(permutationIterator.next(), Arrays.asList('A', 'B', 'C'));
+        assertEquals(Arrays.asList('A', 'B', 'C'), permutationIterator.next());
 
         assertFalse(permutationIterator.hasNext());
     }
@@ -112,14 +112,14 @@ class NextPermutationIteratorTest {
                         new NonComparableObject<>('B')), Comparator.comparing(NonComparableObject::getValue));
 
         assertTrue(permutationIterator.hasNext());
-        assertEquals(permutationIterator.next(), Arrays.asList(
+        assertEquals(Arrays.asList(
                 new NonComparableObject<>('A'),
-                new NonComparableObject<>('B')));
+                new NonComparableObject<>('B')), permutationIterator.next());
 
         assertTrue(permutationIterator.hasNext());
-        assertEquals(permutationIterator.next(), Arrays.asList(
+        assertEquals(Arrays.asList(
                 new NonComparableObject<>('B'),
-                new NonComparableObject<>('A')));
+                new NonComparableObject<>('A')), permutationIterator.next());
 
         assertFalse(permutationIterator.hasNext());
     }
@@ -131,13 +131,13 @@ class NextPermutationIteratorTest {
         List<List<Character>> allPermutations = StreamSupport.stream(iterable.spliterator(), false)
                 .collect(Collectors.toList());
 
-        assertEquals(allPermutations, Arrays.asList(
+        assertEquals(Arrays.asList(
                 Arrays.asList('A', 'B', 'C'),
                 Arrays.asList('A', 'C', 'B'),
                 Arrays.asList('B', 'A', 'C'),
                 Arrays.asList('B', 'C', 'A'),
                 Arrays.asList('C', 'A', 'B'),
-                Arrays.asList('C', 'B', 'A')));
+                Arrays.asList('C', 'B', 'A')), allPermutations);
     }
 
     @Test
