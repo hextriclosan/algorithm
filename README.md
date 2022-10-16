@@ -39,6 +39,12 @@ Predicate<Iterable<Character>> predicate = new IsSortedPredicate<>();
 predicate.test(List.of('A', 'B', 'C')); // true
 ```
 
+##### Is Permutation Predicate
+Evaluates if one list is permutation of another.
+```java
+BiPredicate<List<Character>, List<Character>> predicate = new IsPermutationPredicate<>();
+predicate.test(List.of('A', 'B', 'C'), List.of('C', 'B', 'A')); // true
+```
 
 ### Iterators
 
