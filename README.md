@@ -16,7 +16,7 @@ Alternatively you can pull it from the central Maven repositories:
 
 #### Gradle
 ```groovy
-implementation 'io.github.hextriclosan:algorithm:0.0.2'
+implementation 'io.github.hextriclosan:algorithm:0.0.3'
 ```
 
 ## Basic usage
