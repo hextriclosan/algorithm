@@ -9,6 +9,8 @@ import java.util.function.BiPredicate;
  * Predicate implementation that checks if there exists a permutation of the first list elements that makes
  * that range equal to the range
  *
+ * The worst-case complexity is O(N^2)
+ *
  * @param <E> the type of the objects being checked
  */
 public class IsPermutationPredicate<E> implements BiPredicate<List<E>, List<E>>, Serializable {
@@ -45,56 +47,56 @@ public class IsPermutationPredicate<E> implements BiPredicate<List<E>, List<E>>,
     /**
      * Checks if one list is permutation of another
      *
-     * @param list1 the first list
-     * @param list2 the second list
+     * @param first the first list
+     * @param second the second list
      *
      * @return true if one list is permutation of another, false otherwise
      */
     @Override
-    public boolean test(List<E> list1, List<E> list2) {
-        if (list1.size() != list2.size()) {
+    public boolean test(List<E> first, List<E> second) {
+        if (first.size() != second.size()) {
             return false;
         }
 
-        int index1 = 0;
-        int index2 = 0;
+        int firstIndex = 0;
+        int secondIndex = 0;
         //  shorten sequences as much as possible by lopping of any equal prefix
-        for (; index1 < list1.size(); ++index1, ++index2) {
-            if (!predicate.test(list1.get(index1), list2.get(index2))) {
+        for (; firstIndex < first.size(); ++firstIndex, ++secondIndex) {
+            if (!predicate.test(first.get(firstIndex), second.get(secondIndex))) {
                 break;
             }
         }
 
-        for (int i = index1; i < list1.size(); ++i) {
-            // Have we already counted the number of i in [ index1, list1.size() )?
-            int match = index1;
+        for (int i = firstIndex; i < first.size(); ++i) {
+            // Have we already counted the number of i in [ firstIndex, first.size() )?
+            int match = firstIndex;
             for (; match != i; ++match) {
-                if (predicate.test(list1.get(match), list1.get(i))) {
+                if (predicate.test(first.get(match), first.get(i))) {
                     break;
                 }
             }
 
             if (match == i) {
 
-                // Count number of i in [ index2, list2.size() )
-                int c2 = 0;
-                for (int j = index2; j < list2.size(); ++j) {
-                    if (predicate.test(list1.get(i), list2.get(j))) {
-                        ++c2;
+                // Count number of i in [ secondIndex, second.size() )
+                int secondCounter = 0;
+                for (int j = secondIndex; j < second.size(); ++j) {
+                    if (predicate.test(first.get(i), second.get(j))) {
+                        ++secondCounter;
                     }
                 }
-                if (c2 == 0) {
+                if (secondCounter == 0) {
                     return false;
                 }
 
-                // Count number of i in [ i, list1.size() ) (we can start with 1)
-                int c1 = 1;
-                for (int j = i + 1; j < list1.size(); ++j) {
-                    if (predicate.test(list1.get(i), list1.get(j))) {
-                        ++c1;
+                // Count number of i in [ i, first.size() ) (we can start with 1)
+                int firstCounter = 1;
+                for (int j = i + 1; j < first.size(); ++j) {
+                    if (predicate.test(first.get(i), first.get(j))) {
+                        ++firstCounter;
                     }
                 }
-                if (c1 != c2) {
+                if (firstCounter != secondCounter) {
                     return false;
                 }
 
