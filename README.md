@@ -10,7 +10,7 @@ Alternatively you can pull it from the central Maven repositories:
 <dependency>
     <groupId>io.github.hextriclosan</groupId>
     <artifactId>algorithm</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
 </dependency>
 ```
 
@@ -58,4 +58,16 @@ iterator.forEachRemaining(System.out::println);
 // [A, B, B]
 // [B, A, B]
 // [B, B, A]
+```
+
+##### Sampling Iterator
+This iterator creates random samples of a given size from the input `List`. 
+The algorithm preserves original order of elements.
+```java
+var iterator = new SamplingIterator<>(List.of('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'), 3);
+iterator.forEachRemaining(System.out::println);
+// prints out
+// [A, D, H]
+// [B, E, G]
+// [C, F]
 ```
