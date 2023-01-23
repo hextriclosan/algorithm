@@ -66,7 +66,7 @@ The algorithm preserves original order of elements.
 ```java
 var iterator = new SamplingIterator<>(List.of('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'), 3);
 iterator.forEachRemaining(System.out::println);
-// prints out
+// one of possible outputs
 // [A, D, H]
 // [B, E, G]
 // [C, F]

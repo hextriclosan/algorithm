@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.function.ToIntBiFunction;
 
 /**
  * This iterator creates permutations of an input collection, using the
@@ -29,7 +30,7 @@ public class NextPermutationIterator<E> implements Iterator<List<E>> {
      * The comparator used to define order of generation,
      * or null if it uses the natural ordering.
      */
-    private final Comparator<? super E> comparator;
+    private final ToIntBiFunction<? super E, ? super E> compareFunction;
 
     /**
      * Next permutation to return. When a permutation is requested
@@ -55,10 +56,13 @@ public class NextPermutationIterator<E> implements Iterator<List<E>> {
      *                   If null, the natural ordering of the elements will be used.
      * @throws NullPointerException if collection is null
      */
+    @SuppressWarnings("unchecked")
     public NextPermutationIterator(final Collection<? extends E> collection, final Comparator<? super E> comparator) {
         Objects.requireNonNull(collection, "collection");
         nextPermutation = new ArrayList<>(collection);
-        this.comparator = comparator;
+        compareFunction = comparator == null
+                ? (e1, e2) -> ((Comparable<? super E>) e1).compareTo(e2)
+                : comparator::compare;
     }
 
     /**
@@ -87,12 +91,12 @@ public class NextPermutationIterator<E> implements Iterator<List<E>> {
         List<E> nextP = null;
 
         int i = size - 2;
-        for (; i >= 0 && compare(nextPermutation.get(i), nextPermutation.get(i + 1)) >= 0; --i) {
+        for (; i >= 0 && compareElements(nextPermutation.get(i), nextPermutation.get(i + 1)) >= 0; --i) {
         }
 
         if (i >= 0) {
             int j = size - 1;
-            for (; j >= i && compare(nextPermutation.get(i), nextPermutation.get(j)) >= 0; --j) {
+            for (; j >= i && compareElements(nextPermutation.get(i), nextPermutation.get(j)) >= 0; --j) {
             }
 
             nextP = new ArrayList<>(nextPermutation);
@@ -114,10 +118,7 @@ public class NextPermutationIterator<E> implements Iterator<List<E>> {
         throw new UnsupportedOperationException("remove() is not supported");
     }
 
-    @SuppressWarnings("unchecked")
-    private int compare(E e1, E e2) {
-        return comparator == null
-                ? ((Comparable<? super E>) e1).compareTo(e2)
-                : comparator.compare(e1, e2);
+    private int compareElements(E e1, E e2) {
+        return compareFunction.applyAsInt(e1, e2);
     }
 }

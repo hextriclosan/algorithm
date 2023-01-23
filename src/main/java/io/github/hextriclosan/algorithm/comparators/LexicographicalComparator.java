@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.function.ToIntBiFunction;
 
 /**
  * A Comparator that will compare Iterables in lexicographical order.
@@ -22,7 +23,7 @@ public class LexicographicalComparator<E> implements Comparator<Iterable<E>>, Se
      * The comparator to use when comparing elements of Iterable,
      * or null if it uses the natural ordering.
      **/
-    private final Comparator<? super E> comparator;
+    private final ToIntBiFunction<? super E, ? super E> compareFunction;
 
 
     /**
@@ -38,8 +39,11 @@ public class LexicographicalComparator<E> implements Comparator<Iterable<E>>, Se
      * @param comparator the comparator used to compare elements of Iterable.
      *                   If null, the natural ordering of the elements will be used.
      */
+    @SuppressWarnings("unchecked")
     public LexicographicalComparator(final Comparator<? super E> comparator) {
-        this.comparator = comparator;
+        compareFunction = comparator == null
+                ? (e1, e2) -> ((Comparable<? super E>) e1).compareTo(e2)
+                : comparator::compare;
     }
 
     /**
@@ -88,8 +92,7 @@ public class LexicographicalComparator<E> implements Comparator<Iterable<E>>, Se
         }
 
         final LexicographicalComparator<?> other = (LexicographicalComparator<?>) obj;
-
-        return comparator.equals(other.comparator);
+        return compareFunction.equals(other.compareFunction);
     }
 
     /**
@@ -100,13 +103,10 @@ public class LexicographicalComparator<E> implements Comparator<Iterable<E>>, Se
      **/
     @Override
     public int hashCode() {
-        return Objects.hash(comparator);
+        return Objects.hash(compareFunction);
     }
 
-    @SuppressWarnings("unchecked")
     private int compareElements(E e1, E e2) {
-        return comparator == null
-                ? ((Comparable<? super E>) e1).compareTo(e2)
-                : comparator.compare(e1, e2);
+        return compareFunction.applyAsInt(e1, e2);
     }
 }
