@@ -2,7 +2,7 @@
 # Java Algorithms
 
 ## Acquiring Algorithms
-You can download source and binaries from our [release page](https://github.com/hextriclosan/algorithm/releases/latest).
+You can download source and binaries from the [release page](https://github.com/hextriclosan/algorithm/releases/latest).
 Alternatively you can pull it from the central Maven repositories:
 
 #### Maven
@@ -52,7 +52,7 @@ predicate.test(List.of('A', 'B', 'C'), List.of('C', 'B', 'A')); // true
 Inspired by `next_permutation`/`prev_permutation` algorithms from C++ standard
 library. The iterator creates permutations of an input collection, using the lexicographical order.
 ```java
-var iterator = new NextPermutationIterator<>(List.of('A', 'B', 'B'));
+Iterator<List<Character>> iterator = new NextPermutationIterator<>(List.of('A', 'B', 'B'));
 iterator.forEachRemaining(System.out::println);
 // prints out
 // [A, B, B]
@@ -64,7 +64,7 @@ iterator.forEachRemaining(System.out::println);
 This iterator creates random samples of a given size from the input `List`. 
 The algorithm preserves original order of elements.
 ```java
-var iterator = new SamplingIterator<>(List.of('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'), 3);
+Iterator<List<Character>> iterator = new SamplingIterator<>(List.of('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'), 3);
 iterator.forEachRemaining(System.out::println);
 // one of possible outputs
 // [A, D, H]

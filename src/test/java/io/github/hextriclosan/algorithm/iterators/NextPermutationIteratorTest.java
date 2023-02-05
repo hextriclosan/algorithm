@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -149,5 +150,27 @@ class NextPermutationIteratorTest {
 
         assertTrue(permutationIterator.hasNext());
         assertThrows(ClassCastException.class, permutationIterator::next);
+    }
+
+    @Test
+    void shouldThrowWhenNoMorePermutationsLeft() {
+        Iterator<List<Character>> permutationIterator = new NextPermutationIterator<>(Arrays.asList('A', 'B'));
+
+        assertTrue(permutationIterator.hasNext());
+        assertEquals(Arrays.asList('A', 'B'), permutationIterator.next());
+
+        assertTrue(permutationIterator.hasNext());
+        assertEquals(Arrays.asList('B', 'A'), permutationIterator.next());
+
+        assertFalse(permutationIterator.hasNext());
+        assertThrows(NoSuchElementException.class, permutationIterator::next);
+    }
+
+    @Test
+    void shouldThrowWhenRemoveIsCalled() {
+        Iterator<List<Character>> permutationIterator = new NextPermutationIterator<>(Arrays.asList('A', 'B', 'C'));
+
+        assertTrue(permutationIterator.hasNext());
+        assertThrows(UnsupportedOperationException.class, permutationIterator::remove);
     }
 }
