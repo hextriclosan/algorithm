@@ -8,7 +8,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.function.ToIntBiFunction;
 
 /**
  * This iterator creates permutations of an input collection, using the
@@ -30,7 +29,7 @@ public class NextPermutationIterator<E> implements Iterator<List<E>> {
      * The comparator used to define order of generation,
      * or null if it uses the natural ordering.
      */
-    private final ToIntBiFunction<? super E, ? super E> compareFunction;
+    private final Comparator<? super E> comparator;
 
     /**
      * Next permutation to return. When a permutation is requested
@@ -56,13 +55,10 @@ public class NextPermutationIterator<E> implements Iterator<List<E>> {
      *                   If null, the natural ordering of the elements will be used.
      * @throws NullPointerException if collection is null
      */
-    @SuppressWarnings("unchecked")
     public NextPermutationIterator(final Collection<? extends E> collection, final Comparator<? super E> comparator) {
         Objects.requireNonNull(collection, "collection");
         nextPermutation = new ArrayList<>(collection);
-        compareFunction = comparator == null
-                ? (e1, e2) -> ((Comparable<? super E>) e1).compareTo(e2)
-                : comparator::compare;
+        this.comparator = comparator;
     }
 
     /**
@@ -118,7 +114,30 @@ public class NextPermutationIterator<E> implements Iterator<List<E>> {
         throw new UnsupportedOperationException("remove() is not supported");
     }
 
-    private int compareElements(E e1, E e2) {
-        return compareFunction.applyAsInt(e1, e2);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        NextPermutationIterator<?> that = (NextPermutationIterator<?>) o;
+        return Objects.equals(comparator, that.comparator) && Objects.equals(nextPermutation, that.nextPermutation);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(comparator, nextPermutation);
+    }
+
+    @SuppressWarnings("unchecked")
+    private int compareElements(E e1, E e2) {
+        return comparator == null
+                ? ((Comparable<? super E>) e1).compareTo(e2)
+                : comparator.compare(e1, e2);
+    }
+
 }

@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.Predicate;
-import java.util.function.ToIntBiFunction;
 
 
 /**
@@ -25,7 +24,7 @@ public final class IsSortedPredicate<T> implements Predicate<Iterable<T>>, Seria
      * The custom comparator used to check order,
      * or null if it uses the natural ordering.
      */
-    private final ToIntBiFunction<? super T, ? super T> compareFunction;
+    private final Comparator<? super T> comparator;
 
     /**
      * Standard constructor for this class.
@@ -42,11 +41,8 @@ public final class IsSortedPredicate<T> implements Predicate<Iterable<T>>, Seria
      * @param comparator the custom comparator used to check order,
      *        or null if it uses the natural ordering.
      */
-    @SuppressWarnings("unchecked")
     public IsSortedPredicate(Comparator<? super T> comparator) {
-        compareFunction = comparator == null
-                ? (t1, t2) -> ((Comparable<? super T>) t1).compareTo(t2)
-                : comparator::compare;
+        this.comparator = comparator;
     }
 
     /**
@@ -79,7 +75,30 @@ public final class IsSortedPredicate<T> implements Predicate<Iterable<T>>, Seria
         return true;
     }
 
-    private int compareElements(T t1, T t2) {
-        return compareFunction.applyAsInt(t1, t2);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        IsSortedPredicate<?> that = (IsSortedPredicate<?>) o;
+        return Objects.equals(comparator, that.comparator);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(comparator);
+    }
+
+    @SuppressWarnings("unchecked")
+    private int compareElements(T t1, T t2) {
+        return comparator == null
+                ? ((Comparable<? super T>) t1).compareTo(t2)
+                : comparator.compare(t1, t2);
+    }
+
 }

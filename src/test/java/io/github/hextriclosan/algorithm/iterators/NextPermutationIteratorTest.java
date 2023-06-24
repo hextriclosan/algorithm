@@ -1,10 +1,10 @@
 package io.github.hextriclosan.algorithm.iterators;
 
+import io.github.hextriclosan.algorithm.helpers.CustomComparator;
 import io.github.hextriclosan.algorithm.helpers.NonComparableObject;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -12,6 +12,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -21,7 +22,7 @@ class NextPermutationIteratorTest {
 
     @Test
     void shouldReturnOneEmptyResultForEmptyList() {
-        Iterator<List<Integer>> permutationIterator = new NextPermutationIterator<>(Collections.emptyList());
+        Iterator<List<Integer>> permutationIterator = new NextPermutationIterator<>(emptyList());
 
         assertTrue(permutationIterator.hasNext());
         assertTrue(permutationIterator.next().isEmpty());
@@ -173,4 +174,37 @@ class NextPermutationIteratorTest {
         assertTrue(permutationIterator.hasNext());
         assertThrows(UnsupportedOperationException.class, permutationIterator::remove);
     }
+
+    @Test
+    void shouldTreatObjectsWithEqualCollectionsAsEqual() {
+        Iterator<List<Short>> one = new NextPermutationIterator<>(emptyList());
+        Iterator<List<Short>> another = new NextPermutationIterator<>(emptyList());
+
+        assertEquals(one, another);
+    }
+
+    @Test
+    void shouldTreatObjectsWithEqualCollectionsAndComparatorsAsEqual() {
+        Iterator<List<Short>> one = new NextPermutationIterator<>(emptyList(), new CustomComparator<>(42));
+        Iterator<List<Short>> another = new NextPermutationIterator<>(emptyList(), new CustomComparator<>(42));
+
+        assertEquals(one, another);
+    }
+
+    @Test
+    void shouldReturnSameHashcodeForObjectsWithSameHashcodeCollections() {
+        Iterator<List<Short>> one = new NextPermutationIterator<>(emptyList());
+        Iterator<List<Short>> another = new NextPermutationIterator<>(emptyList());
+
+        assertEquals(one.hashCode(), another.hashCode());
+    }
+
+    @Test
+    void shouldReturnSameHashcodeForObjectsWithSameHashcodeCollectionsAndComparators() {
+        Iterator<List<Short>> one = new NextPermutationIterator<>(emptyList(), new CustomComparator<>(42));
+        Iterator<List<Short>> another = new NextPermutationIterator<>(emptyList(), new CustomComparator<>(42));
+
+        assertEquals(one.hashCode(), another.hashCode());
+    }
+
 }

@@ -101,6 +101,25 @@ public class SamplingIterator<E> implements Iterator<List<E>> {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        SamplingIterator<?> that = (SamplingIterator<?>) o;
+        return sampleSize == that.sampleSize && toSample.equals(that.toSample);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(toSample, sampleSize);
+    }
+
     private void nextSample() {
         if (start >= toSample.size()) {
             nextSample = null;

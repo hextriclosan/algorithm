@@ -1,12 +1,15 @@
 package io.github.hextriclosan.algorithm.comparators;
 
+import io.github.hextriclosan.algorithm.helpers.CustomComparator;
 import io.github.hextriclosan.algorithm.helpers.NonComparableObject;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 
 import static java.util.Collections.emptyList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -34,7 +37,7 @@ class LexicographicalComparatorTest {
 
     @Test
     void shouldReturnZeroResultWhenFirstIterableIsEqualToSecondUsingNaturalOrdering() {
-        assertTrue(naturalOrderComparator.compare(ABC, ABC) == 0);
+        assertEquals(0, naturalOrderComparator.compare(ABC, ABC));
     }
 
     @Test
@@ -59,7 +62,7 @@ class LexicographicalComparatorTest {
 
     @Test
     void shouldReturnZeroResultWhenBothIterablesAreEmpty() {
-        assertTrue(naturalOrderComparator.compare(EMPTY, EMPTY) == 0);
+        assertEquals(0, naturalOrderComparator.compare(EMPTY, EMPTY));
     }
 
     @Test
@@ -72,27 +75,62 @@ class LexicographicalComparatorTest {
         Comparator<Iterable<NonComparableObject<Character>>> comparator =
                 new LexicographicalComparator<>(Comparator.comparing(NonComparableObject::getValue));
         assertTrue(comparator.compare(
-                Arrays.asList(new NonComparableObject<>('A')),
-                Arrays.asList(new NonComparableObject<>('B'))) < 0);
+                Collections.singletonList(new NonComparableObject<>('A')),
+                Collections.singletonList(new NonComparableObject<>('B'))) < 0);
     }
 
     @Test
     void shouldThrowWhenObjectsAreNonComparableWithoutCustomComparator() {
         Comparator<Iterable<NonComparableObject<Character>>> comparator = new LexicographicalComparator<>();
         assertThrows(ClassCastException.class, () -> comparator.compare(
-                Arrays.asList(new NonComparableObject<>('A')),
-                Arrays.asList(new NonComparableObject<>('B'))));
+                Collections.singletonList(new NonComparableObject<>('A')),
+                Collections.singletonList(new NonComparableObject<>('B'))));
     }
 
     @Test
     void shouldReturnCorrectResultComparingBaseTypesWithCustomComparator() {
         Comparator<Iterable<Number>> comparator = new LexicographicalComparator<>(Comparator.comparingLong(Number::longValue));
-        assertTrue(comparator.compare(Arrays.asList(1), Arrays.asList(1L)) == 0);
+        assertEquals(0, comparator.compare(Collections.singletonList(1), Collections.singletonList(1L)));
     }
 
     @Test
     void shouldThrowWhenTypesAreNotComparableWithoutCustomComparator() {
         Comparator<Iterable<Number>> comparator = new LexicographicalComparator<>();
-        assertThrows(ClassCastException.class, () -> comparator.compare(Arrays.asList(1), Arrays.asList(1L)));
+        assertThrows(ClassCastException.class, () -> comparator.compare(
+                Collections.singletonList(1),
+                Collections.singletonList(1L)));
     }
+
+    @Test
+    void shouldTreatDefaultConstructedObjectsAsEqual() {
+        Comparator<Iterable<Number>> one = new LexicographicalComparator<>();
+        Comparator<Iterable<Number>> another = new LexicographicalComparator<>();
+
+        assertEquals(one, another);
+    }
+
+    @Test
+    void shouldTreatObjectsWithEqualComparatorsAsEqual() {
+        Comparator<Iterable<Number>> one = new LexicographicalComparator<>(new CustomComparator<>(42));
+        Comparator<Iterable<Number>> another = new LexicographicalComparator<>(new CustomComparator<>(42));
+
+        assertEquals(one, another);
+    }
+
+    @Test
+    void shouldReturnSameHashcodeForDefaultConstructedObjects() {
+        Comparator<Iterable<Number>> one = new LexicographicalComparator<>();
+        Comparator<Iterable<Number>> another = new LexicographicalComparator<>();
+
+        assertEquals(one.hashCode(), another.hashCode());
+    }
+
+    @Test
+    void shouldReturnSameHashcodeForObjectsWithSameHashcodeComparators() {
+        Comparator<Iterable<Number>> one = new LexicographicalComparator<>(new CustomComparator<>(42));
+        Comparator<Iterable<Number>> another = new LexicographicalComparator<>(new CustomComparator<>(42));
+
+        assertEquals(one.hashCode(), another.hashCode());
+    }
+
 }

@@ -140,4 +140,37 @@ class SamplingIteratorTest {
         assertEquals(100, expectedSamplesCount.get());
         assertEquals(collectionSize, index.size());
     }
+
+    @Test
+    void shouldTreatObjectsWithEqualListsAndSampleSizeAsEqual() {
+        Iterator<List<Character>> one = new SamplingIterator<>(LIST, 3);
+        Iterator<List<Character>> another = new SamplingIterator<>(LIST, 3);
+
+        assertEquals(one, another);
+    }
+
+    @Test
+    void shouldTreatObjectsWithEqualListsAndSampleSizeIgnoringRandomAsEqual() {
+        Iterator<List<Character>> one = new SamplingIterator<>(LIST, 3, new Random(1));
+        Iterator<List<Character>> another = new SamplingIterator<>(LIST, 3, new Random(2));
+
+        assertEquals(one, another);
+    }
+
+    @Test
+    void shouldReturnSameHashcodeForObjectsWithSameHashcodeListsAndSampleSize() {
+        Iterator<List<Character>> one = new SamplingIterator<>(LIST, 3);
+        Iterator<List<Character>> another = new SamplingIterator<>(LIST, 3);;
+
+        assertEquals(one.hashCode(), another.hashCode());
+    }
+
+    @Test
+    void shouldReturnSameHashcodeForObjectsWithSameHashcodeListsAndSampleSizeIgnoringRandom() {
+        Iterator<List<Character>> one = new SamplingIterator<>(LIST, 3, new Random(1));
+        Iterator<List<Character>> another = new SamplingIterator<>(LIST, 3, new Random(2));
+
+        assertEquals(one.hashCode(), another.hashCode());
+    }
+
 }

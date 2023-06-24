@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Objects;
-import java.util.function.ToIntBiFunction;
 
 /**
  * A Comparator that will compare Iterables in lexicographical order.
@@ -23,8 +22,7 @@ public class LexicographicalComparator<E> implements Comparator<Iterable<E>>, Se
      * The comparator to use when comparing elements of Iterable,
      * or null if it uses the natural ordering.
      **/
-    private final ToIntBiFunction<? super E, ? super E> compareFunction;
-
+    private final Comparator<? super E> comparator;
 
     /**
      * Construct an instance that compares elements of Iterable in the natural order.
@@ -39,11 +37,8 @@ public class LexicographicalComparator<E> implements Comparator<Iterable<E>>, Se
      * @param comparator the comparator used to compare elements of Iterable.
      *                   If null, the natural ordering of the elements will be used.
      */
-    @SuppressWarnings("unchecked")
     public LexicographicalComparator(final Comparator<? super E> comparator) {
-        compareFunction = comparator == null
-                ? (e1, e2) -> ((Comparable<? super E>) e1).compareTo(e2)
-                : comparator::compare;
+        this.comparator = comparator;
     }
 
     /**
@@ -68,7 +63,10 @@ public class LexicographicalComparator<E> implements Comparator<Iterable<E>>, Se
             }
         }
 
-        return it1.hasNext() ? 1 : it2.hasNext() ? -1 : 0;
+        if (it1.hasNext()) {
+            return 1;
+        }
+        return it2.hasNext() ? -1 : 0;
     }
 
     /**
@@ -92,7 +90,7 @@ public class LexicographicalComparator<E> implements Comparator<Iterable<E>>, Se
         }
 
         final LexicographicalComparator<?> other = (LexicographicalComparator<?>) obj;
-        return compareFunction.equals(other.compareFunction);
+        return Objects.equals(comparator, other.comparator);
     }
 
     /**
@@ -103,10 +101,14 @@ public class LexicographicalComparator<E> implements Comparator<Iterable<E>>, Se
      **/
     @Override
     public int hashCode() {
-        return Objects.hash(compareFunction);
+        return Objects.hash(comparator);
     }
 
+    @SuppressWarnings("unchecked")
     private int compareElements(E e1, E e2) {
-        return compareFunction.applyAsInt(e1, e2);
+        return comparator == null
+                ? ((Comparable<? super E>) e1).compareTo(e2)
+                : comparator.compare(e1, e2);
     }
+
 }

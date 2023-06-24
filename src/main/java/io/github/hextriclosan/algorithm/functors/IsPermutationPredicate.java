@@ -41,7 +41,8 @@ public class IsPermutationPredicate<E> implements BiPredicate<List<E>, List<E>>,
      *        or null if it uses the natural equality.
      */
     public IsPermutationPredicate(BiPredicate<? super E, ? super E> predicate) {
-        this.predicate = predicate != null ? predicate : Objects::equals;
+        //this.predicate = predicate != null ? predicate : Objects::equals;
+        this.predicate = predicate;
     }
 
     /**
@@ -62,7 +63,7 @@ public class IsPermutationPredicate<E> implements BiPredicate<List<E>, List<E>>,
         int secondIndex = 0;
         //  shorten sequences as much as possible by lopping of any equal prefix
         for (; firstIndex < first.size(); ++firstIndex, ++secondIndex) {
-            if (!predicate.test(first.get(firstIndex), second.get(secondIndex))) {
+            if (!testElements(first.get(firstIndex), second.get(secondIndex))) {
                 break;
             }
         }
@@ -71,7 +72,7 @@ public class IsPermutationPredicate<E> implements BiPredicate<List<E>, List<E>>,
             // Have we already counted the number of i in [ firstIndex, first.size() )?
             int match = firstIndex;
             for (; match != i; ++match) {
-                if (predicate.test(first.get(match), first.get(i))) {
+                if (testElements(first.get(match), first.get(i))) {
                     break;
                 }
             }
@@ -81,7 +82,7 @@ public class IsPermutationPredicate<E> implements BiPredicate<List<E>, List<E>>,
                 // Count number of i in [ secondIndex, second.size() )
                 int secondCounter = 0;
                 for (int j = secondIndex; j < second.size(); ++j) {
-                    if (predicate.test(first.get(i), second.get(j))) {
+                    if (testElements(first.get(i), second.get(j))) {
                         ++secondCounter;
                     }
                 }
@@ -92,7 +93,7 @@ public class IsPermutationPredicate<E> implements BiPredicate<List<E>, List<E>>,
                 // Count number of i in [ i, first.size() ) (we can start with 1)
                 int firstCounter = 1;
                 for (int j = i + 1; j < first.size(); ++j) {
-                    if (predicate.test(first.get(i), first.get(j))) {
+                    if (testElements(first.get(i), first.get(j))) {
                         ++firstCounter;
                     }
                 }
@@ -105,6 +106,31 @@ public class IsPermutationPredicate<E> implements BiPredicate<List<E>, List<E>>,
         }
 
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        IsPermutationPredicate<?> that = (IsPermutationPredicate<?>) o;
+        return Objects.equals(predicate, that.predicate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(predicate);
+    }
+
+    private boolean testElements(E e1, E e2) {
+        return predicate == null
+                ? Objects.equals(e1, e2)
+                : predicate.test(e1, e2);
     }
 
 }

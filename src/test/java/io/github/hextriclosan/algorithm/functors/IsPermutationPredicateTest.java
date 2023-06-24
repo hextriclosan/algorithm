@@ -1,5 +1,6 @@
 package io.github.hextriclosan.algorithm.functors;
 
+import io.github.hextriclosan.algorithm.helpers.CustomBiPredicate;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -7,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.BiPredicate;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -78,4 +80,37 @@ class IsPermutationPredicateTest {
                 Arrays.asList(8, 10, 19, 17)    // 2, 1, 1, 2
         ));
     }
+
+    @Test
+    void shouldTreatDefaultConstructedObjectsAsEqual() {
+        BiPredicate<List<Short>, List<Short>> one = new IsPermutationPredicate<>();
+        BiPredicate<List<Short>, List<Short>> another = new IsPermutationPredicate<>();
+
+        assertEquals(one, another);
+    }
+
+    @Test
+    void shouldTreatObjectsWithEqualPredicatesAsEqual() {
+        BiPredicate<List<Short>, List<Short>> one = new IsPermutationPredicate<>(new CustomBiPredicate<>(42));
+        BiPredicate<List<Short>, List<Short>> another = new IsPermutationPredicate<>(new CustomBiPredicate<>(42));
+
+        assertEquals(one, another);
+    }
+
+    @Test
+    void shouldReturnSameHashcodeForDefaultConstructedObjects() {
+        BiPredicate<List<Short>, List<Short>> one = new IsPermutationPredicate<>();
+        BiPredicate<List<Short>, List<Short>> another = new IsPermutationPredicate<>();
+
+        assertEquals(one.hashCode(), another.hashCode());
+    }
+
+    @Test
+    void shouldReturnSameHashcodeForObjectsWithSameHashcodePredicates() {
+        BiPredicate<List<Short>, List<Short>> one = new IsPermutationPredicate<>(new CustomBiPredicate<>(42));
+        BiPredicate<List<Short>, List<Short>> another = new IsPermutationPredicate<>(new CustomBiPredicate<>(42));
+
+        assertEquals(one.hashCode(), another.hashCode());
+    }
+
 }

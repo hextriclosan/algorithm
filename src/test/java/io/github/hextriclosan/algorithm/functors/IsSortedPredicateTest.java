@@ -1,5 +1,6 @@
 package io.github.hextriclosan.algorithm.functors;
 
+import io.github.hextriclosan.algorithm.helpers.CustomComparator;
 import io.github.hextriclosan.algorithm.helpers.NonComparableObject;
 import org.junit.jupiter.api.Test;
 
@@ -8,6 +9,7 @@ import java.util.Comparator;
 import java.util.function.Predicate;
 
 import static java.util.Collections.emptyList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -59,4 +61,37 @@ class IsSortedPredicateTest {
                 new NonComparableObject<>('A'),
                 new NonComparableObject<>('B'))));
     }
+
+    @Test
+    void shouldTreatDefaultConstructedObjectsAsEqual() {
+        Predicate<Iterable<Number>> one = new IsSortedPredicate<>();
+        Predicate<Iterable<Number>> another = new IsSortedPredicate<>();
+
+        assertEquals(one, another);
+    }
+
+    @Test
+    void shouldTreatObjectsWithEqualComparatorsAsEqual() {
+        Predicate<Iterable<Number>> one = new IsSortedPredicate<>(new CustomComparator<>(42));
+        Predicate<Iterable<Number>> another = new IsSortedPredicate<>(new CustomComparator<>(42));
+
+        assertEquals(one, another);
+    }
+
+    @Test
+    void shouldReturnSameHashcodeForDefaultConstructedObjects() {
+        Predicate<Iterable<Number>> one = new IsSortedPredicate<>();
+        Predicate<Iterable<Number>> another = new IsSortedPredicate<>();
+
+        assertEquals(one.hashCode(), another.hashCode());
+    }
+
+    @Test
+    void shouldReturnSameHashcodeForObjectsWithSameHashcodeComparators() {
+        Predicate<Iterable<Number>> one = new IsSortedPredicate<>(new CustomComparator<>(42));
+        Predicate<Iterable<Number>> another = new IsSortedPredicate<>(new CustomComparator<>(42));
+
+        assertEquals(one.hashCode(), another.hashCode());
+    }
+
 }
