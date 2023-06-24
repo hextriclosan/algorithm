@@ -127,14 +127,12 @@ public class SamplingIterator<E> implements Iterator<List<E>> {
         }
 
         final int len = Math.min(sampleSize, toSample.size() - start);
-        List<E> next = new ArrayList<>(len);
-        index.subList(start, start + len).stream()
+        nextSample = index.subList(start, start + len).stream()
                 .sorted()
-                .mapToInt(Integer::intValue)
-                .forEach(i -> next.add(toSample.get(i)));
+                .map(toSample::get)
+                .collect(Collectors.toCollection(ArrayList::new));
 
         start += len;
-        nextSample = next;
     }
 
     private void validate(Collection<? extends E> collection, int sampleSize, Random random) {
