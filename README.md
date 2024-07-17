@@ -10,16 +10,49 @@ Alternatively you can pull it from the central Maven repositories:
 <dependency>
     <groupId>io.github.hextriclosan</groupId>
     <artifactId>algorithm</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
 </dependency>
 ```
 
 #### Gradle
 ```groovy
-implementation 'io.github.hextriclosan:algorithm:0.0.3'
+implementation 'io.github.hextriclosan:algorithm:0.0.4'
 ```
 
 ## Basic usage
+
+### Collections
+
+##### Disjoint Set
+Disjoint Set a.k.a. Union-Find data structure implementation
+```java
+DisjointSet<String> disjointSet = new DisjointSet<>();
+disjointSet.makeSets(List.of("New York", "Los Angeles", "Chicago", "Houston"));
+
+record Edge(String firstCity, String secondCity, int distance) {
+}
+
+List<Edge> edges = List.of(
+        new Edge("New York", "Los Angeles", 2445),
+        new Edge("New York", "Chicago", 790),
+        new Edge("New York", "Houston", 1628),
+        new Edge("Los Angeles", "Chicago", 2015),
+        new Edge("Los Angeles", "Houston", 1547),
+        new Edge("Chicago", "Houston", 1092)
+);
+
+edges.stream()
+    .sorted(Comparator.comparingInt(Edge::distance))
+    .filter(edge -> disjointSet.find(edge.firstCity()) != disjointSet.find(edge.secondCity()))
+    .forEach(edge -> {
+        disjointSet.union(edge.firstCity(), edge.secondCity());
+        System.out.println(edge);
+    });
+// prints out
+// Edge[firstCity=New York, secondCity=Chicago, distance=790]
+// Edge[firstCity=Chicago, secondCity=Houston, distance=1092]
+// Edge[firstCity=Los Angeles, secondCity=Houston, distance=1547]
+```
 
 ### Comparators
 
